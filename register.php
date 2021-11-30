@@ -1,39 +1,33 @@
-<style>
-   <?php include 'reset.css' ?>
-</style>
-<style>
-   <?php include 'style.css' ?>
-</style>
-
 <?php
-function debug_to_console($data)
-{
-   $output = $data;
-   if (is_array($output))
-      $output = implode(',', $output);
 
-   echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
-}
 $error = NULL;
-
+echo "this is a test";
 
 if (isset($_POST['submit'])) {
    //get form data
+   echo "This is a message";
+
    $name = $_POST['name'];
    $email = $_POST['email'];
    $p1 = $_POST['password1'];
    $p2 = $_POST['password2'];
 
-   if (strlen($name) < 5) {
-      $error = "<p>Your name must contain atleast 5 character</p>";
-   } elseif ($p1 != $p2) {
+   // debug_to_console($name);
+
+
+   if ($p1 != $p2) {
       $error = "<p>Your passwords do not match</p>";
    } else {
       //form is valid
       //connect to the database
 
-      $mysqli = new mysqli('localhost', 'root', '', 'test');
-
+      $mysqli = new MySQLi('localhost', 'root', '', 'test');
+      if ($mysqli->connect_error) {
+         die("Connection failed: " . $mysqli->$connect_error);
+      } else {
+         echo "Connected Successfully";
+      }
+      // echo "<p>Your passwords do not match</p>";
       //Sanitize
       $name = $mysqli->real_escape_string($name);
       $email = $mysqli->real_escape_string($email);
@@ -44,11 +38,22 @@ if (isset($_POST['submit'])) {
       $vkey = md5(time() . $name);
       debug_to_console($vkey);
 
-      //insert into the database
-      $insert = $mysqli->query("INSERT INTO accounts(name, email, password, vkey) VALUES($name,$email, $password,$vkey)");
+
+
+      $vkey = md5(time() . "abc");
+      printf($vkey);
+      $insert = $mysqli->query("INSERT into accounts(name, email, password, vkey) VALUES('$name', '$email','$p1', '$vkey')");
+      if ($insert) {
+         echo "Success";
+      } else {
+         echo "failure";
+      }
    }
+} else {
+   echo "not isset";
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -63,21 +68,20 @@ if (isset($_POST['submit'])) {
    <div class="background">
       <div class="flex-container">
          <div class="form-container">
-            <form method="POST" action="">
-               <label for="name">Name</label><br>
+            <form method="post" action="">
+               <label>Name</label><br>
                <input type="text" id="name" required><br>
 
-               <label for="email">Email</label><br>
+               <label>Email</label><br>
                <input type="email" id="email" required><br>
 
-               <label for="password">Password</label><br>
+               <label>Password</label><br>
                <input type="text" id="password1" required><br>
-               <label for="password"> Confirm Password</label><br>
+               <label> Confirm Password</label><br>
                <input type="text" id="password2" required><br>
 
                <!-- <label for="submit">Go</label><br> -->
                <input type="submit" id="submit" value="Register">
-
 
             </form>
          </div>
@@ -86,7 +90,8 @@ if (isset($_POST['submit'])) {
 
    </div>
    <?php
-   debug_to_console($error);
+   echo $error;
+   echo "some statement";
    ?>
 </body>
 
