@@ -16,3 +16,22 @@ function debug_to_console($data)
    echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 ?>
+
+
+
+<form method="get" action="register.php">
+               <label>Name</label><br>
+               <input type="text" id="name" required><br>
+
+               <label>Email</label><br>
+               <input type="email" id="email" required><br>
+
+               <label>Password</label><br>
+               <input type="text" id="password1" required><br>
+               <label> Confirm Password</label><br>
+               <input type="text" id="password2" required><br>
+
+               <!-- <label for="submit">Go</label><br> -->
+               <input type="submit" id="submit" value="1">
+
+            </form>
